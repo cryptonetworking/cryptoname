@@ -1,11 +1,11 @@
-package cns
+package cryptoname
 
 import (
 	"context"
 	"errors"
-	"github.com/cryptonetworking/cns/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/cryptonetworking/cryptography/pkg/ed25519"
+	"github.com/cryptonetworking/cryptoname/pkg/datagram"
 	"github.com/itsabgr/go-handy"
 	"github.com/samber/lo"
 	"net/netip"

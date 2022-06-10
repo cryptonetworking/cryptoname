@@ -4,8 +4,7 @@ import (
 	"context"
 	"encoding/base32"
 	"fmt"
-	"github.com/cryptonetworking/cns/pkg/cns"
-	"github.com/cryptonetworking/cns/pkg/datagram"
+	"github.com/cryptonetworking/crpyotname/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/cryptonetworking/cryptography/pkg/ed25519"
 	"github.com/itsabgr/go-handy"
@@ -17,13 +16,13 @@ import (
 	"time"
 )
 
-var args = cmd.New(cmd.OptName("cns"), cmd.OptDetails("crypto-safe name service client"))
+var args = cmd.New(cmd.OptName("cryptoname"), cmd.OptDetails("crypto-safe name service client"))
 var globalCtx, cancel = context.WithCancel(context.Background())
 var flagDebug = args.Bool("debug", false, "is debug")
 var flagLog = args.String("log", "", "log output (empty means std)")
 
 //
-var subCmdNode = args.SubCommand("node", "initial a cns node")
+var subCmdNode = args.SubCommand("node", "initial a cryptoname node")
 var flagNodeTTL = subCmdNode.Duration("ttl", handy.Month, "default record TTL")
 var flagNodePingTTL = subCmdNode.Duration("ping-ttl", time.Minute, "default ping TTL")
 var flagNodeDir = subCmdNode.String("dir", "", "data directory (empty means in-memory)")
@@ -80,7 +79,7 @@ func main() {
 		handy.Throw(err)
 		decoded, err := cryptography.DecodePK(pk)
 		handy.Throw(err)
-		record, err := cns.Search(globalCtx, decoded, netip.MustParseAddrPort(*flagGetNode))
+		record, err := crpyotname.Search(globalCtx, decoded, netip.MustParseAddrPort(*flagGetNode))
 		handy.Throw(err)
 		log.Println("Addr", record.Addr)
 		log.Println("Rec", record.Revision)
@@ -91,7 +90,7 @@ func main() {
 		handy.Throw(err)
 		decoded, err := cryptography.DecodeSK(sk)
 		handy.Throw(err)
-		handy.Throw(cns.Update(globalCtx, 1, decoded, uint64(*flagSetRev), netip.MustParseAddrPort(*flagSetAddr), netip.MustParseAddrPort(*flagSetNode)))
+		handy.Throw(crpyotname.Update(globalCtx, 1, decoded, uint64(*flagSetRev), netip.MustParseAddrPort(*flagSetAddr), netip.MustParseAddrPort(*flagSetNode)))
 	case subCmdNode.Parsed():
 		var sk *cryptography.SK
 		if *flagNodeSK == "" {
@@ -115,10 +114,10 @@ func main() {
 		dgram, err := datagram.Create(netip.MustParseAddrPort(*flagNodeAddr))
 		handy.Throw(err)
 		defer handy.Just(dgram.Close)
-		st, err := cns.OpenStorage(*flagNodeDir)
+		st, err := crpyotname.OpenStorage(*flagNodeDir)
 		handy.Throw(err)
 		defer handy.Just(st.Close)
-		node := cns.New(dgram, st, sk)
+		node := crpyotname.New(dgram, st, sk)
 		node.DefaultTTL = *flagNodeTTL
 		node.PingTTL = *flagNodePingTTL
 		if *flagNodePeer != "" {

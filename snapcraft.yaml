@@ -1,22 +1,26 @@
-name: cns
+name: cryptoname
 base: core18
 version: '1.0.0'
-summary: cns
-description: cns
+summary: cryptoname
+description: cryptoname
 grade: stable
 confinement: strict
 layout:
-  /var/lib/cns-node:
-    bind: $SNAP_DATA/var/lib/cns-node
+  /var/lib/crpyotname-node:
+    bind: $SNAP_DATA/var/lib/cryptoname-node
 parts:
-  cns-node:
+  crpyotname:
     plugin: go
     source-type: git
-    source: git@github.com:cryptonetworking/cns.git
+    source: git@github.com:cryptonetworking/cryptoname.git
 apps:
-  longlogd:
+  cryptons:
+    command: cryptoname
+    plugs:
+      - network-bind
+  crpyotname-node:
     daemon: simple
-    command: cns node -addr 0.0.0.0:9999 -dir /var/lib/cns-node
+    command: cryptoname node -addr 0.0.0.0:9999 -dir /var/lib/cryptoname-node
     stop-timeout: 10m
     stop-mode: sigterm
     install-mode: enable

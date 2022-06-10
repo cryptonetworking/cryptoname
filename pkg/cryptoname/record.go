@@ -1,4 +1,4 @@
-package cns
+package cryptoname
 
 import (
 	"bytes"

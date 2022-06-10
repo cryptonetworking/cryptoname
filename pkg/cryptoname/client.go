@@ -1,9 +1,9 @@
-package cns
+package cryptoname
 
 import (
 	"bytes"
 	"context"
-	"github.com/cryptonetworking/cns/pkg/datagram"
+	"github.com/cryptonetworking/crpyotname/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/itsabgr/go-handy"
 	"net/netip"

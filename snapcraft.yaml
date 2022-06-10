@@ -11,7 +11,8 @@ layout:
 parts:
   cns-node:
     plugin: go
-    source: https://github.com/cryptonetworking/cns
+    source-type: git
+    source: git@github.com:cryptonetworking/cns.git
 apps:
   longlogd:
     daemon: simple

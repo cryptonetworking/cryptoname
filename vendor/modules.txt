@@ -52,7 +52,6 @@ github.com/hashicorp/errwrap
 github.com/hashicorp/go-multierror
 # github.com/itsabgr/cpuset v0.0.0-20220424153013-186c672acf21
 ## explicit; go 1.18
-github.com/itsabgr/cpuset
 # github.com/itsabgr/go-ctx v0.0.0-20220425174534-5ab50877653e
 ## explicit; go 1.18
 github.com/itsabgr/go-ctx

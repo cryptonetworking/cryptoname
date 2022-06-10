@@ -1,0 +1,23 @@
+name: cns
+base: core18
+version: '1.0.0'
+summary: cns
+description: cns
+grade: stable
+confinement: strict
+layout:
+  /var/lib/cns-node:
+    bind: $SNAP_DATA/var/lib/cns
+parts:
+  cns-node:
+    plugin: go
+    source: github.com/cryptonetworking/cns
+apps:
+  longlogd:
+    daemon: simple
+    command: cns  -addr 0.0.0.0:9999 -dir /var/lib/cns
+    stop-timeout: 10m
+    stop-mode: sigterm
+    install-mode: enable
+    plugs:
+      - network-bind

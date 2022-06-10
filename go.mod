@@ -1,4 +1,4 @@
-module github.com/cryptonetworking/crpyotname
+module github.com/cryptonetworking/crpytoname
 
 go 1.18
 

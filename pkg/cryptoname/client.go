@@ -3,8 +3,8 @@ package cryptoname
 import (
 	"bytes"
 	"context"
-	"github.com/cryptonetworking/crpyotname/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
+	"github.com/cryptonetworking/cryptoname/pkg/datagram"
 	"github.com/itsabgr/go-handy"
 	"net/netip"
 	"time"
@@ -21,10 +21,10 @@ func Update(ctx context.Context, kind uint8, sk *cryptography.SK, rev uint64, ad
 			rev = uint64(time.Now().Unix())
 		}
 		update := &Record{
-			Addr:     addr,
-			Revision: rev,
-			PK:       sk.PK().Encode(),
-			Kind:     kind,
+			Addr: addr,
+			Rev:  rev,
+			PK:   sk.PK().Encode(),
+			Kind: kind,
 		}
 		update.Sign(sk)
 		for ctx.Err() == nil {
@@ -38,7 +38,7 @@ func Update(ctx context.Context, kind uint8, sk *cryptography.SK, rev uint64, ad
 		if err != nil {
 			return err
 		}
-		if record.Revision == rev {
+		if record.Rev == rev {
 			return nil
 		}
 	}

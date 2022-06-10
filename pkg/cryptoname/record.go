@@ -10,11 +10,11 @@ import (
 import "github.com/vmihailenco/msgpack/v5"
 
 type Record struct {
-	Sig      []byte
-	PK       []byte
-	Kind     uint8
-	Revision uint64
-	Addr     netip.AddrPort
+	Sig  []byte         `msgpack:"sig,omitempty"`
+	PK   []byte         `msgpack:"pk,omitempty"`
+	Kind uint8          `msgpack:"kind,omitempty"`
+	Rev  uint64         `msgpack:"rev,omitempty"`
+	Addr netip.AddrPort `msgpack:"addr,omitempty"`
 }
 
 func (r *Record) Encode() []byte {

@@ -1,11 +1,10 @@
-module github.com/cryptonetworking/crpytoname
+module github.com/cryptonetworking/cryptoname
 
 go 1.18
 
 require (
 	github.com/cryptonetworking/cryptography v0.0.0-20220606222249-3996ff58a8fb
 	github.com/dgraph-io/badger/v3 v3.2103.2
-	github.com/itsabgr/go-ctx v0.0.0-20220425174534-5ab50877653e
 	github.com/itsabgr/go-handy v0.0.0-20220609210443-7622fce7d7df
 	github.com/posener/cmd v1.3.4
 	github.com/samber/lo v1.21.0
@@ -26,7 +25,6 @@ require (
 	github.com/google/flatbuffers v2.0.6+incompatible // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
-	github.com/itsabgr/cpuset v0.0.0-20220424153013-186c672acf21 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/posener/complete/v2 v2.0.1-alpha.12 // indirect
@@ -35,7 +33,6 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20220609121020-a51bd0440498 // indirect
 	golang.org/x/net v0.0.0-20220607020251-c690dde0001d // indirect
 	google.golang.org/protobuf v1.28.0 // indirect

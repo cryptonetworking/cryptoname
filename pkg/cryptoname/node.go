@@ -108,7 +108,7 @@ func (n *node) broadcast(record *Record, addrs ...netip.AddrPort) error {
 }
 func (n *node) ping() error {
 	record := new(Record)
-	record.Revision = uint64(time.Now().Unix())
+	record.Rev = uint64(time.Now().Unix())
 	record.Addr = n.conn.Addr()
 	record.Sign(n.id)
 	err := n.storage.Store(record, n.PingTTL)

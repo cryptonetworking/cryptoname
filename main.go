@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/base32"
 	"fmt"
-	"github.com/cryptonetworking/crpyotname/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/cryptonetworking/cryptography/pkg/ed25519"
+	"github.com/cryptonetworking/cryptoname/pkg/cryptoname"
+	"github.com/cryptonetworking/cryptoname/pkg/datagram"
 	"github.com/itsabgr/go-handy"
 	"github.com/posener/cmd"
 	"log"
@@ -79,10 +80,10 @@ func main() {
 		handy.Throw(err)
 		decoded, err := cryptography.DecodePK(pk)
 		handy.Throw(err)
-		record, err := crpyotname.Search(globalCtx, decoded, netip.MustParseAddrPort(*flagGetNode))
+		record, err := cryptoname.Search(globalCtx, decoded, netip.MustParseAddrPort(*flagGetNode))
 		handy.Throw(err)
 		log.Println("Addr", record.Addr)
-		log.Println("Rec", record.Revision)
+		log.Println("Rec", record.Rev)
 	case subCmdSet.Parsed():
 		globalCtx, cancel = context.WithTimeout(globalCtx, *flagSetTO)
 		defer cancel()
@@ -90,7 +91,7 @@ func main() {
 		handy.Throw(err)
 		decoded, err := cryptography.DecodeSK(sk)
 		handy.Throw(err)
-		handy.Throw(crpyotname.Update(globalCtx, 1, decoded, uint64(*flagSetRev), netip.MustParseAddrPort(*flagSetAddr), netip.MustParseAddrPort(*flagSetNode)))
+		handy.Throw(cryptoname.Update(globalCtx, 1, decoded, uint64(*flagSetRev), netip.MustParseAddrPort(*flagSetAddr), netip.MustParseAddrPort(*flagSetNode)))
 	case subCmdNode.Parsed():
 		var sk *cryptography.SK
 		if *flagNodeSK == "" {
@@ -114,10 +115,10 @@ func main() {
 		dgram, err := datagram.Create(netip.MustParseAddrPort(*flagNodeAddr))
 		handy.Throw(err)
 		defer handy.Just(dgram.Close)
-		st, err := crpyotname.OpenStorage(*flagNodeDir)
+		st, err := cryptoname.OpenStorage(*flagNodeDir)
 		handy.Throw(err)
 		defer handy.Just(st.Close)
-		node := crpyotname.New(dgram, st, sk)
+		node := cryptoname.New(dgram, st, sk)
 		node.DefaultTTL = *flagNodeTTL
 		node.PingTTL = *flagNodePingTTL
 		if *flagNodePeer != "" {

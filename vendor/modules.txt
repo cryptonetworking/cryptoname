@@ -50,11 +50,6 @@ github.com/hashicorp/errwrap
 # github.com/hashicorp/go-multierror v1.0.0
 ## explicit
 github.com/hashicorp/go-multierror
-# github.com/itsabgr/cpuset v0.0.0-20220424153013-186c672acf21
-## explicit; go 1.18
-# github.com/itsabgr/go-ctx v0.0.0-20220425174534-5ab50877653e
-## explicit; go 1.18
-github.com/itsabgr/go-ctx
 # github.com/itsabgr/go-handy v0.0.0-20220609210443-7622fce7d7df
 ## explicit; go 1.18
 github.com/itsabgr/go-handy
@@ -109,9 +104,6 @@ go.opencensus.io/internal
 go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/tracestate
-# go.uber.org/atomic v1.9.0
-## explicit; go 1.13
-go.uber.org/atomic
 # golang.org/x/exp v0.0.0-20220609121020-a51bd0440498
 ## explicit; go 1.18
 golang.org/x/exp/constraints

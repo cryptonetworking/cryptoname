@@ -75,10 +75,10 @@ func (st *storage) Store(record *Record, ttl time.Duration) error {
 				found := new(Record)
 				err := found.Decode(val)
 				if err == nil {
-					if found.Revision == record.Revision {
+					if found.Rev == record.Rev {
 						return ErrDuplicateRecord
 					}
-					if found.Revision > record.Revision {
+					if found.Rev > record.Rev {
 						return ErrOldRecord
 					}
 				}

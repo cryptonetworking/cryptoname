@@ -20,7 +20,7 @@ func Listen(ctx context.Context, addr netip.AddrPort, storage string, id *crypto
 		return err
 	}
 	defer handy.Just(st.Close)
-	node := New(dgram, st)
+	node := New(dgram, st, id)
 	node.id = id
 	node.DefaultTTL = DefaultTTL
 	node.PingTTL = PingTTL

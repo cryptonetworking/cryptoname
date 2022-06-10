@@ -103,7 +103,7 @@ func (dgram *Datagram) Close() error {
 
 func (dgram *Datagram) RecvFrom(ctx context.Context, b []byte) (int, netip.AddrPort, error) {
 	for ctx.Err() == nil {
-		n, from, err := syscall.Recvfrom(dgram.fd, b, unix.MSG_DONTWAIT)
+		n, from, err := syscall.Recvfrom(dgram.fd, b, 0)
 		if err != nil {
 			if err == unix.EAGAIN {
 				runtime.Gosched()

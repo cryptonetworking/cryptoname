@@ -5,6 +5,7 @@ import (
 	"encoding/base32"
 	"fmt"
 	"github.com/cryptonetworking/cns/pkg/cns"
+	"github.com/cryptonetworking/cns/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/cryptonetworking/cryptography/pkg/ed25519"
 	"github.com/itsabgr/go-handy"
@@ -20,6 +21,8 @@ var args = cmd.New(cmd.OptName("cns"), cmd.OptDetails("crypto-safe name service 
 var globalCtx, cancel = context.WithCancel(context.Background())
 var flagDebug = args.Bool("debug", false, "is debug")
 var flagLog = args.String("log", "", "log output (empty means std)")
+
+//
 var subCmdNode = args.SubCommand("node", "initial a cns node")
 var flagNodeTTL = subCmdNode.Duration("ttl", handy.Month, "default record TTL")
 var flagNodePingTTL = subCmdNode.Duration("ping-ttl", time.Minute, "default ping TTL")
@@ -54,14 +57,13 @@ func main() {
 		if *flagDebug {
 			panic(recovered)
 		}
-		log.Fatal(recovered)
+		if subCmdNode.Parsed() {
+			log.Fatal(recovered)
+		} else {
+			fmt.Println(recovered)
+			os.Exit(1)
+		}
 	})
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Kill, os.Interrupt)
-		log.Println("SIGNAL", <-c)
-		cancel()
-	}()
 	handy.Throw(args.ParseArgs(os.Args...))
 	if *flagLog != "" {
 		out, err := os.OpenFile(*flagLog, os.O_CREATE|os.O_APPEND, 0666)
@@ -104,14 +106,25 @@ func main() {
 		if *flagNodePeer != "" {
 			peers = append(peers, netip.MustParseAddrPort(*flagNodePeer))
 		}
-		handy.Throw(cns.Listen(globalCtx,
-			netip.MustParseAddrPort(*flagNodeAddr),
-			*flagNodeDir,
-			sk,
-			*flagNodeTTL,
-			*flagNodePingTTL,
-			peers...,
-		))
+		go func() {
+			sigChan := make(chan os.Signal, 1)
+			signal.Notify(sigChan, os.Kill, os.Interrupt)
+			log.Println("SIGNAL", <-sigChan)
+			cancel()
+		}()
+		dgram, err := datagram.Create(netip.MustParseAddrPort(*flagNodeAddr))
+		handy.Throw(err)
+		defer handy.Just(dgram.Close)
+		st, err := cns.OpenStorage(*flagNodeDir)
+		handy.Throw(err)
+		defer handy.Just(st.Close)
+		node := cns.New(dgram, st, sk)
+		node.DefaultTTL = *flagNodeTTL
+		node.PingTTL = *flagNodePingTTL
+		if *flagNodePeer != "" {
+			handy.Throw(node.AddPeer(netip.MustParseAddrPort(*flagNodePeer), true))
+		}
+		handy.Throw(node.Start(globalCtx))
 	case subCmdDerive.Parsed():
 		sk, err := base32.StdEncoding.WithPadding(base32.NoPadding).DecodeString(*flagDeriveSK)
 		handy.Throw(err)

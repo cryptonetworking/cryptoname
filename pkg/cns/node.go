@@ -6,7 +6,6 @@ import (
 	"github.com/cryptonetworking/cns/pkg/datagram"
 	"github.com/cryptonetworking/cryptography"
 	"github.com/cryptonetworking/cryptography/pkg/ed25519"
-	"github.com/itsabgr/go-ctx"
 	"github.com/itsabgr/go-handy"
 	"github.com/samber/lo"
 	"net/netip"
@@ -29,21 +28,23 @@ type node struct {
 	pings      []*ping
 }
 
-func (n *node) Start(aCtx context.Context) error {
-	aCtx, cancel := ctx.WithCancel(aCtx)
-	defer cancel(nil)
-	for range handy.N(runtime.NumCPU()) {
-		go func() {
-			err := n.listen(aCtx)
+func (n *node) Start(ctx1 context.Context) error {
+	ctx2, cancel := context.WithCancel(ctx1)
+	defer cancel()
+	for i := range handy.N(runtime.NumCPU()) {
+		go func(_ int) {
+			runtime.LockOSThread()
+			err := n.listen(ctx2)
 			if err != nil {
-				cancel(err)
+				cancel()
 			}
-		}()
+		}(i)
 	}
-	return n.pinger(aCtx)
+	return n.pinger(ctx2)
 }
-func New(conn *datagram.Datagram, storage *storage) *node {
+func New(conn *datagram.Datagram, storage *storage, id *cryptography.SK) *node {
 	n := &node{conn: conn, storage: storage, id: cryptography.Gen(ed25519.Algo)}
+	n.id = id
 	return n
 }
 func (n *node) pinger(ctx context.Context) error {
@@ -119,7 +120,7 @@ func (n *node) ping() error {
 func (n *node) listen(ctx context.Context) error {
 	b := make([]byte, 1024)
 	record := new(Record)
-	for {
+	for ctx.Err() == nil {
 		readN, from, err := n.conn.RecvFrom(ctx, b)
 		if err != nil {
 			return err
@@ -163,4 +164,5 @@ func (n *node) listen(ctx context.Context) error {
 		}
 		_ = n.broadcast(record, n.Peers()...)
 	}
+	return ctx.Err()
 }

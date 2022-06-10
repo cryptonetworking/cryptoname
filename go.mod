@@ -26,6 +26,7 @@ require (
 	github.com/google/flatbuffers v2.0.6+incompatible // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
+	github.com/itsabgr/cpuset v0.0.0-20220424153013-186c672acf21 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/posener/complete/v2 v2.0.1-alpha.12 // indirect
